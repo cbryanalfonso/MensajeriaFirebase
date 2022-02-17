@@ -2,14 +2,14 @@ import React from "react";
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
 
-export default function Menu() {
+export default function HomeScreen() {
     const tamanio = 30
     return (
         <SafeAreaView style={{ backgroundColor: '#ecf0f1', flex: 1 }}>
             <View style={{ flex: 0.23, }}>
                 <View style={{ flex: 1, flexDirection: "row", }}>
                     <View style={styles.header}>
-                        <Text style={{ color: 'green', fontWeight: "bold", fontSize: 30 }}>Mensajeria</Text>
+                        <Text style={styles.txtTituloApp}>Mensajeria</Text>
                     </View>
                     <View style={[styles.header, { flexDirection: 'row', alignItems: "center", justifyContent: 'space-around' }]}>
                         <TouchableOpacity style={styles.btnHeaders}>
@@ -43,7 +43,7 @@ export default function Menu() {
                 </View>
                 <View style={{ flex: 1, flexDirection: "row", }}>
                     <View style={{ flex: 1 }}>
-                        <Text style={{ color: 'green', fontWeight: "bold", fontSize: 16 }}>Mensajeria</Text>
+                        <Text style={{ color: 'green', fontWeight: "bold", fontSize: 16 }}>Flatlist</Text>
                     </View>
                     <View style={{ flex: 1 }}>
 
@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30
     },
-    txtMensajes: { color: 'black', fontSize: 30, marginLeft: 20 },
-    txtNotificacion: { fontSize: 15, color: '#bdc3c7', fontStyle: 'italic' }
+    txtMensajes: { color: 'black', fontSize: 30, marginLeft: 20, fontWeight: 'bold' },
+    txtNotificacion: { fontSize: 15, color: '#bdc3c7', fontStyle: 'italic', fontWeight:'normal' },
+    txtTituloApp:{ color: 'green', fontWeight: "bold", fontSize: 30 },
 
 })
