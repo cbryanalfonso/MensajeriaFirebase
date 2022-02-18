@@ -7,6 +7,7 @@ import Menu from "./views/Menu";
 import Providers from "./navegacion";
 import LoginScreen from "./credenciales/LoginScreen";
 import SignUpScreen from "./credenciales/SignupScreen";
+import AppLogin from "./AppLogin";
 
 
 const TRANSITIONS = ['fade', 'slide', 'none'];
@@ -37,12 +38,7 @@ export default function App() {
         showHideTransition={statusBarTransition}
         hidden={false}
       />
-      <Stack.Navigator>
-        <Stack.Screen name="SignupScreen" component={SignUpScreen} options={{headerShown: false}} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }} />
-        <Stack.Screen name="Fondo" component={Fondo} options={{ headerShown: false }} />
-      </Stack.Navigator>
+      <AppLogin/>
     </NavigationContainer>
   );
 }

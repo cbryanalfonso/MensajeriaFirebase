@@ -1,11 +1,40 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Icon } from "react-native-elements";
+import { firebase } from "@react-native-firebase/storage";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import { Avatar, Icon } from "react-native-elements";
+import ImageCropPicker from "react-native-image-crop-picker";
+import { getCurrentUser } from "../Component/helpers";
+import ModalConfiguracion from "../Component/ModalConfiguracion";
 
-export default function HomeScreen() {
+
+export default function HomeScreen({navigation}) {
     const tamanio = 30
+    const [photoURL, setPhotoUrl] = useState('')
+    const [showModal, setShowModal] = useState(false)
+    useEffect(()=>{
+        console.log("Usuario actual ->",getCurrentUser().uid);
+        console.log("Photo ->", photoURL);
+        setPhotoUrl(getCurrentUser().photoURL)
+    },[])
+
+    function OpenGallery() {
+        ImageCropPicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping: true,
+        }).then(image => {
+            console.log(image.path);
+            //console.log(firebase.auth().currentUser.uid);
+            //setPhotoUrl(image.path)
+        })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
     return (
         <SafeAreaView style={{ backgroundColor: '#ecf0f1', flex: 1 }}>
+            <ModalConfiguracion isVisible={showModal} setVisible={setShowModal} navigation={navigation} />
             <View style={{ flex: 0.23, }}>
                 <View style={{ flex: 1, flexDirection: "row", }}>
                     <View style={styles.header}>
@@ -30,7 +59,9 @@ export default function HomeScreen() {
 
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnHeaders}>
+                        <TouchableOpacity style={styles.btnHeaders}
+                        onPress={()=> setShowModal(true)}
+                        >
                             <Icon
                                 type="material-community"
                                 name="dots-horizontal"
@@ -42,10 +73,21 @@ export default function HomeScreen() {
                     </View>
                 </View>
                 <View style={{ flex: 1, flexDirection: "row", }}>
-                    <View style={{ flex: 1 }}>
-                        <Text style={{ color: 'green', fontWeight: "bold", fontSize: 16 }}>Flatlist</Text>
+                    <View style={{ flex: 0.5, alignItems: "center" }}>
+                        <Avatar
+                            size="xlarge"
+                            rounded
+                            size="large"
+                            containerStyle={styles.btnFoto}
+                            onPress={() => OpenGallery()}
+                            source={
+                                photoURL ?
+                                    { uri: photoURL } :
+                                    require("../assets/avatar-default.jpg")
+                            }
+                        />
                     </View>
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1.5 }}>
 
                     </View>
                 </View>
@@ -57,7 +99,7 @@ export default function HomeScreen() {
                         <Text style={[styles.txtMensajes, styles.txtNotificacion]}>Notificacion</Text>
                     </View>
                     <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 30 }}>
-                        <TouchableOpacity style={[styles.btnHeaders,{backgroundColor: '#ecf0f1'}]}>
+                        <TouchableOpacity style={[styles.btnHeaders, { backgroundColor: '#ecf0f1' }]}>
                             <Icon
                                 type="material-community"
                                 name="archive-outline"
@@ -77,8 +119,8 @@ const styles = StyleSheet.create({
     header: { flex: 1, justifyContent: "center", paddingLeft: 15 },
     btnHeaders: {
         backgroundColor: '#bdc3c7',
-        width: 50,
-        height: 50,
+        width: 45,
+        height: 45,
         borderRadius: 50 / 2,
         justifyContent: "center",
         alignItems: "center"
@@ -91,7 +133,13 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 30
     },
     txtMensajes: { color: 'black', fontSize: 30, marginLeft: 20, fontWeight: 'bold' },
-    txtNotificacion: { fontSize: 15, color: '#bdc3c7', fontStyle: 'italic', fontWeight:'normal' },
-    txtTituloApp:{ color: 'green', fontWeight: "bold", fontSize: 30 },
-
+    txtNotificacion: { fontSize: 15, color: '#bdc3c7', fontStyle: 'italic', fontWeight: 'normal' },
+    txtTituloApp: { color: 'green', fontWeight: "bold", fontSize: 30 },
+    btnFoto: {
+        //backgroundColor: "#dfe6e9",
+        width: 60,
+        height: 60,
+        borderRadius: 40,
+        marginBottom: 10,
+    },
 })
