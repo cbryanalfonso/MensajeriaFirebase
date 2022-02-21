@@ -37,6 +37,7 @@ export default function SignUpScreen({ navigation }) {
                 email: correo,
                 password: contra,
                 imageUrl: url,
+                uid: usuarios,
             })
             .then(() => {
                // navigation.navigate('LoginScreen')

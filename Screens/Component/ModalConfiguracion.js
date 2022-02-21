@@ -15,7 +15,7 @@ import {
     Alert,
 } from 'react-native';
 import { Icon, Overlay } from "react-native-elements";
-export default function ModalConfiguracion({ navigation, isVisible, setVisible }) {
+export default function ModalConfiguracion({ navigation, isVisible, setVisible, data, setData }) {
     return (
         <Modal
             animationType="fade"
@@ -34,7 +34,10 @@ export default function ModalConfiguracion({ navigation, isVisible, setVisible }
                             <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: 'bold' }}>Mensajeria Options</Text>
                         </View>
                         <View style={{ flexDirection: "row", flex: 0.2, justifyContent: "space-around", alignItems: "center" }}>
-                            <TouchableOpacity style={styles.btnIcono} onPress={() => setVisible(false)}>
+                            <TouchableOpacity style={styles.btnIcono} onPress={() => {
+                                setVisible(false)
+                                //setData(false)
+                            }}>
                                 <Icon type="material-community" name="close" color={'#e74c3c'} size={30} />
                             </TouchableOpacity>
                         </View>
@@ -49,8 +52,8 @@ export default function ModalConfiguracion({ navigation, isVisible, setVisible }
                         <TouchableOpacity style={styles.btnIcono}>
                             <Icon type="material-community" name="history" color={'#2ecc71'} size={30} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnIcono} onPress={() => 
-                            firebase.auth().signOut().then(()=>{
+                        <TouchableOpacity style={styles.btnIcono} onPress={() =>
+                            firebase.auth().signOut().then(() => {
                                 console.log("Sesión Cerrada");
                                 Alert.alert("God Luck!, See you soon")
                                 navigation.navigate('LoginScreen')
@@ -81,20 +84,15 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         flex: 1,
         marginHorizontal: 10,
-        //width: "100%",
-        //opacity: 0.5
     },
     modalView: {
 
         justifyContent: "center",
         flex: 0.28,
         width: "100%",
-        //backgroundColor: "green",
         borderRadius: 26,
         marginBottom: "11%",
         backgroundColor: 'rgba(200,200,200,0.5)'
-
-
     },
     btnIcono: {
         borderRadius: 50 / 2,

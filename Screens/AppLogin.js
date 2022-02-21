@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUpScreen from "./credenciales/SignupScreen";
 import LoginScreen from "./credenciales/LoginScreen";
 import Menu from "./views/Menu";
+import ChatScreen from "./views/ChatScreen";
 
 const Stack = createNativeStackNavigator()
 const MainStack = createNativeStackNavigator()
@@ -33,6 +34,7 @@ export default function AppLogin() {
     const StackAuth = () => (
         <MainStack.Navigator>
             <MainStack.Screen name="Menu" component={Menu} options={{ headerShown: false }} />
+            <MainStack.Screen name="Chat" component={ChatScreen} options={{headerShown: false}}/>
             <MainStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
             <MainStack.Screen name="SignupScreen" component={SignUpScreen} options={{ headerShown: false }} />
         </MainStack.Navigator>
