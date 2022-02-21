@@ -4,6 +4,7 @@ import { Formik } from "formik";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View, ScrollView } from "react-native";
 import Boton from "../Component/Boton";
+import { getCurrentUser } from "../Component/helpers";
 import InputTxt from "../Component/InputTxt";
 
 
@@ -15,6 +16,10 @@ export default function LoginScreen({ navigation }) {
                 .signInWithEmailAndPassword(values.email, values.password)
                 .then(userCredential => {
                     console.log("Inicio de sesión exitoso ...");
+                    
+                    db.database().ref('Usuarios/'+ getCurrentUser().uid)
+                    .update({state: true})
+
                     navigation.navigate('Menu')
                 })
                 .catch(error => {

@@ -1,4 +1,5 @@
 import { firebase } from "@react-native-firebase/auth";
+import { firebase as db } from "@react-native-firebase/database";
 import React from "react";
 import {
     StyleSheet,
@@ -15,6 +16,7 @@ import {
     Alert,
 } from 'react-native';
 import { Icon, Overlay } from "react-native-elements";
+import { getCurrentUser } from "./helpers";
 export default function ModalConfiguracion({ navigation, isVisible, setVisible, data, setData }) {
     return (
         <Modal
@@ -52,12 +54,21 @@ export default function ModalConfiguracion({ navigation, isVisible, setVisible, 
                         <TouchableOpacity style={styles.btnIcono}>
                             <Icon type="material-community" name="history" color={'#2ecc71'} size={30} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnIcono} onPress={() =>
-                            firebase.auth().signOut().then(() => {
-                                console.log("Sesión Cerrada");
-                                Alert.alert("God Luck!, See you soon")
-                                navigation.navigate('LoginScreen')
-                            })
+                        <TouchableOpacity style={styles.btnIcono} onPress={() =>{
+                            try {
+                                firebase.auth().signOut().then(() => {
+                                    db.database().ref('Usuarios/' + getCurrentUser().uid)
+                                        .update({ state: false })
+                                    console.log("Sesión Cerrada");
+                                    Alert.alert("God Luck!, See you soon")
+                                    navigation.navigate('LoginScreen')
+                                })
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        }
+                            
+                        
                         }>
                             <Icon type="material-community" name="logout" color={'#e74c3c'} size={30} />
                         </TouchableOpacity>

@@ -38,6 +38,7 @@ export default function SignUpScreen({ navigation }) {
                 password: contra,
                 imageUrl: url,
                 uid: usuarios,
+                state: true,
             })
             .then(() => {
                // navigation.navigate('LoginScreen')

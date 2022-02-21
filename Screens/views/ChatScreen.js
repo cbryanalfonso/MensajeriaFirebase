@@ -5,6 +5,7 @@ import { Avatar, Bubble, GiftedChat, Send, SystemMessage } from "react-native-gi
 import { getCurrentUser } from "../Component/helpers";
 import theme from '../assets/theme/colors'
 import { IconButton } from "react-native-paper";
+import { Icon } from "react-native-elements";
 
 const ChatScreen = ({ route, navigation }) => {
     const { keyExtractor } = route.params;
@@ -131,60 +132,89 @@ const ChatScreen = ({ route, navigation }) => {
         };
     }
     return (
-        <GiftedChat
-            messages={messages}
-            inverted={false}
-            onSend={handleSend}
-            user={mapUser(user)}
-            placeholder="   Escribir mensaje..."
-            //sty
-            showUserAvatar
-            //renderAvatar={renderAvatar}
-            alwaysShowSend
-            scrollToBottom
-            renderBubble={renderBubble}
-            renderLoading={renderLoading}
-            renderSend={renderSend}
-            scrollToBottomComponent={scrollToBottomComponent}
-            renderSystemMessage={renderSystemMessage}
-        />
+        <>
+            <View style={{flexDirection: "row", alignItems: "center", }}>
+                <TouchableOpacity style={styles.btnBack}
+                    onPress={()=> navigation.goBack()}
+                >
+                    <Icon
+                        type="material-community"
+                        name="keyboard-backspace"
+                        size={30}
+                        color="#2c3e50"
+                    />
+                </TouchableOpacity>
+                <Text style={[styles.txtTituloApp, {paddingLeft: 30}]}>Mensajeria</Text>
+            </View>
+            <GiftedChat
+                messages={messages}
+                inverted={false}
+                onSend={handleSend}
+                user={mapUser(user)}
+                placeholder="   Escribir mensaje..."
+                //sty
+                showUserAvatar
+                //renderAvatar={renderAvatar}
+                alwaysShowSend
+                scrollToBottom
+                renderBubble={renderBubble}
+                renderLoading={renderLoading}
+                renderSend={renderSend}
+                scrollToBottomComponent={scrollToBottomComponent}
+                renderSystemMessage={renderSystemMessage}
+            />
+        </>
     );
 }
 
 const styles = StyleSheet.create({
     loadingContainer: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     sendingContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     bottomComponentContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     systemMessageWrapper: {
-      backgroundColor: '#6646ee',
-      borderRadius: 4,
-      padding: 5,
+        backgroundColor: '#6646ee',
+        borderRadius: 4,
+        padding: 5,
     },
     systemMessageText: {
-      fontSize: 14,
-      color: '#fff',
-      fontWeight: 'bold',
+        fontSize: 14,
+        color: '#fff',
+        fontWeight: 'bold',
     },
     tick: {
-      fontSize: 10,
-      backgroundColor: 'transparent',
-      color: '#fff',
+        fontSize: 10,
+        backgroundColor: 'transparent',
+        color: '#fff',
     },
     tickView: {
-      flexDirection: 'row',
-      marginRight: 10,
+        flexDirection: 'row',
+        marginRight: 10,
     },
-  });
+    txtTituloApp: { 
+        color: 'green', 
+        fontWeight: "bold", 
+        fontSize: 30 
+    },
+    btnBack:{ 
+        backgroundColor: "#ecf0f1", 
+        margin: 20, 
+        width: 40, 
+        height: 40, 
+        borderRadius: 50/2 , 
+        justifyContent: "center", 
+        alignItems: "center"
+    },
+});
 
 
 export default ChatScreen;

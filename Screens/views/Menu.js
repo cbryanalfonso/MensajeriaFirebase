@@ -1,20 +1,24 @@
 import { firebase } from "@react-native-firebase/storage";
 import { firebase as db } from "@react-native-firebase/database";
+import { firebase as aut } from "@react-native-firebase/auth";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Modal, StatusBar, FlatList, ScrollView } from "react-native";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Modal, StatusBar, FlatList, ScrollView, Alert } from "react-native";
 import { Avatar, Icon, Input } from "react-native-elements";
 import ImageCropPicker from "react-native-image-crop-picker";
 import { getCurrentUser } from "../Component/helpers";
 import ModalConfiguracion from "../Component/ModalConfiguracion";
 import InputSeach from "../Component/InputSeach";
 import Personas from "../componentesVistas/Personas";
+import { Divider } from "react-native-paper";
+import { themes } from '../assets/theme/colors'
 
 /***
  * 
  * CORREGIR ERROR DE BUSQUEDA DE USUARIO ...
  */
 
-export default function HomeScreen({ navigation, showSearch }) {
+export default function HomeScreen({ navigation }) {
+    const user = getCurrentUser()
     const tamanio = 30
     const [photoURL, setPhotoUrl] = useState('')
     const [showModal, setShowModal] = useState(false)
@@ -23,17 +27,69 @@ export default function HomeScreen({ navigation, showSearch }) {
     const [dataSetSearch, setDataSetSearch] = useState([])
     const [dataSetSearchPrueba, setDataSetSearchPrueba] = useState([])
     const [showCardFilter, setShowCardFilter] = useState(false)
+    const [arrayOnline, setArrayOnline] = useState([]);
+    const [objOnline, setObjonline] = useState({});
+    const keyExtractor = (item, index) => index.toString();
 
     useEffect(() => {
-       // console.log("Usuario actual ->", getCurrentUser().uid);
-       // console.log("Photo ->", photoURL);
-        setPhotoUrl(getCurrentUser().photoURL)
-        console.log(showSearch);
-        showSearch ? setShowSearchPeople(false) : console.log("No unid")
-        //window.location.reload(false);
+        // console.log("Usuario actual ->", getCurrentUser().uid);
+        // console.log("Photo ->", photoURL);
+        //setPhotoUrl(getCurrentUser().photoURL)
+        //aut.auth().currentUser.photoURL ? setPhotoUrl(aut.auth().currentUser.photoURL) : console.log("no")
+        getCurrentUser().photoURL ? setPhotoUrl(getCurrentUser().photoURL) : console.log("Si hay foto uwu", getCurrentUser().photoURL)
+        // const onChildOnlineAdded = firebase.database()
+        //.ref()
+        const onChildOnlineAdded = db.database()
+            .ref(`Usuarios`)
+            .orderByChild('state')
+            .limitToLast(50)
+            .on('child_added', (snap) => {
+                if (snap.val().state === true) {
+                    if (user.uid !== snap.key) {
+                        //delete objOnline[key];
+                        setObjonline((prevState) => {
+                            const key = snap.key;
+                            const val = snap.val();
+
+                            return { ...prevState, [key]: val };
+                        });
+                    }
+                }
+            });
+
+        const onChildOnlineChanged = db.database()
+            .ref(`Usuarios`)
+            .on('child_changed', (snap) => {
+                //console.log(snap.val());
+                if (snap.val().state === true) {
+                    if (user.uid !== snap.key) {
+                        setObjonline((prevState) => {
+                            const key = snap.key;
+                            const val = snap.val();
+
+                            return { ...prevState, [key]: val };
+                        });
+                    }
+                } else {
+                    setObjonline((prevState) => {
+                        const key = snap.key;
+                        delete prevState[key];
+                        return { ...prevState };
+                    });
+                }
+            });
+        return () => {
+            db.database().ref('usuarios').off('child_added', onChildOnlineAdded);
+            db.database().ref('usuarios').off('child_changed', onChildOnlineChanged);
+        }
     }, [])
 
-    
+    useEffect(() => {
+        const newArray = Object.values(objOnline);
+        setArrayOnline(newArray);
+        console.log("Online: ", newArray)
+    }, [objOnline]);
+
 
     function OpenGallery() {
         ImageCropPicker.openPicker({
@@ -78,24 +134,11 @@ export default function HomeScreen({ navigation, showSearch }) {
     }
     let cadenacorr = [];
     const handleOnChangeText = text => {
-       // console.log("Estamos dentro");
+        // console.log("Estamos dentro");
         if (text === '') {
             setDataSetSearch([])
         } else {
-           /*  var query = db.database().ref("Usuarios").orderByKey();
-            query.once("value")
-              .then(function(snapshot) {
-                snapshot.forEach(function(childSnapshot) {
-                  // key will be "ada" the first time and "alan" the second time
-                  var key = childSnapshot.key;
-                  // childData will be the actual contents of the child
-                  var childData = childSnapshot.val();
-                  console.log(childData);
-              });
-            }); */
-         
-            //var query = db.database().ref("Usuarios").orderByChild("name").equalTo(text);
-            //   orderByChild("name").equalTo(text);
+
             var longi = []
             var query = db.database().ref("Usuarios").orderByChild("name").equalTo(text);
             query.once("value")
@@ -111,14 +154,14 @@ export default function HomeScreen({ navigation, showSearch }) {
                         //console.log((childData));
                         //etShowCardFilter()s
                         //longi.push(childData)
-                       // console.log("->>>>",[...dataSetSearch, childData].length);
+                        // console.log("->>>>",[...dataSetSearch, childData].length);
                         setShowCardFilter([...dataSetSearch, childData].length > 0)
                     });
-                });  
-                //console.log("Esto es lo que se obtiene ->",dataSetSearch.length);
-                //console.log(longi.length);
-               // setDataSetSearch(dataset)
-                
+                });
+            //console.log("Esto es lo que se obtiene ->",dataSetSearch.length);
+            //console.log(longi.length);
+            // setDataSetSearch(dataset)
+
         }
     }
 
@@ -214,7 +257,25 @@ export default function HomeScreen({ navigation, showSearch }) {
                         <Text style={[styles.txtMensajes, styles.txtNotificacion]}>Notificacion</Text>
                     </View>
                     <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 30 }}>
-                        <TouchableOpacity style={[styles.btnHeaders, { backgroundColor: '#ecf0f1' }]}>
+                        <TouchableOpacity style={[styles.btnHeaders, { backgroundColor: '#ecf0f1' }]}
+                            onPress={() => {
+
+                                try {
+                                    aut.auth().signOut().then(() => {
+                                        db.database().ref('Usuarios/' + getCurrentUser().uid)
+                                            .update({ state: false })
+                                        console.log("Sesión Cerrada");
+                                        Alert.alert("God Luck!, See you soon")
+                                        setPhotoUrl('')
+                                        navigation.navigate('LoginScreen')
+                                        
+                                    })
+                                } catch (error) {
+                                    console.log(error);
+                                }
+
+                            }}
+                        >
                             <Icon
                                 type="material-community"
                                 name="archive-outline"
@@ -225,8 +286,43 @@ export default function HomeScreen({ navigation, showSearch }) {
                         </TouchableOpacity>
                     </View>
                 </View>
+
             </View>
-           
+            <View style={{ flex: 0.85, backgroundColor: 'white', paddingHorizontal: 20, }}>
+                <FlatList
+                    data={arrayOnline}
+                    keyExtractor={keyExtractor}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            onPress={() =>
+                                //console.log(item)
+                                navigation.navigate('Chat', { keyExtractor: item })
+                            }>
+                            <View style={styles.notificaciones}>
+                                <Avatar
+                                    size="xlarge"
+                                    rounded
+                                    size="large"
+                                    containerStyle={styles.btnFoto}
+                                    //onPress={() => OpenGallery()}
+                                    source={
+                                        item.imageUrl ?
+                                            { uri: item.imageUrl } :
+                                            require("../assets/avatar-default.jpg")
+                                    }
+                                />
+                                <View style={{ flexDirection: 'column', paddingLeft: 20 }}>
+                                    <Text style={styles.nombre}>{item.name}</Text>
+                                    <Text style={styles.lastMessage}>{item.email}</Text>
+                                </View>
+                            </View>
+
+                        </TouchableOpacity>
+                    )}
+                />
+
+            </View>
+
         </SafeAreaView>
     );
 }
@@ -244,7 +340,7 @@ const styles = StyleSheet.create({
     bodyMensajes: {
         marginTop: 10,
         backgroundColor: 'white',
-        flex: 1,
+        flex: 0.15,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30
     },
@@ -286,7 +382,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    btnSearch: { flex: 0.1, width: '90%', backgroundColor: 'white', borderRadius: 20, alignSelf: "center" }
+    btnSearch: { flex: 0.1, width: '90%', backgroundColor: 'white', borderRadius: 20, alignSelf: "center" },
+    notificaciones: { flexDirection: "row", padding: 20 },
+    nombre: {
+        flexDirection: 'column',
+        flex: 8,
+        paddingLeft: 10,
+        paddingTop: 5,
+        color: "#AA3939",
+    },
+    lastMessage: {
+        paddingLeft: 10,
+        color: 'black',
+    },
 })
 /***
  * 
