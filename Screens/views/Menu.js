@@ -142,7 +142,8 @@ export default function HomeScreen({ navigation, showSearch }) {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.btnHeaders}
                             onPress={() => {
-                                setShowSearchPeople(true)
+                                //setShowSearchPeople(true)
+                                navigation.navigate('Busqueda')
                                 /**
                                  * Lo que sirve
                                  */
@@ -225,90 +226,7 @@ export default function HomeScreen({ navigation, showSearch }) {
                     </View>
                 </View>
             </View>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={showSearchPeople}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                }}
-            >
-                <StatusBar animated={true}
-                    backgroundColor='white'
-                    barStyle="dark-content"
-                    hidden={true}
-                />
-                <SafeAreaView style={styles.centeredVieww}>
-                    <View style={styles.modalView}>
-                        <View style={{ flexDirection: 'row', flex: 0.2, marginTop: 7 }}>
-                            <View style={{ flex: 0.8, justifyContent: "center" }}>
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: 'bold' }}>Search People</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", flex: 0.2, justifyContent: "space-around", alignItems: "center" }}>
-                                <TouchableOpacity style={styles.btnIcono} onPress={() => {setShowSearchPeople(false)
-                                    setShowCardFilter(false)
-                                    setDataSetSearch([])
-                                }}>
-                                    <Icon type="material-community" name="close" color={'#e74c3c'} size={30} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        <View style={{ width: "100%" }} >
-                            <Input
-                                placeholder="Search location"
-                                placeholderTextColor='#2ecc71'
-                                //style={{ color: '#ecf0f1', }}
-                                onChangeText={textSearch => handleOnChangeText(textSearch)}
-                                inputContainerStyle={{ borderBottomWidth: 0, borderRadius: 20, justifyContent: "center", marginTop: 20, paddingHorizontal: 20, backgroundColor: '#ecf0f1', }}
-                                leftIcon={<Icon
-                                    type="material-community"
-                                    name="magnify"
-                                    size={30}
-                                    color='#2ecc71'
-                                />}
-                            />
-                            {/* <InputSeach
-                                placeholder={'Search for person '}
-                                value={textSearch}
-                                onChangeText={handleOnChangeText}
-                            // addStyle={{ height: '90%',}}
-                            /> */}
-                        </View>
-
-                        <View style={{ flex: 0.7, width: "100%" }} >
-                            {showCardFilter ? (
-                                <View style={{flex: 1, }}>
-                                    <FlatList
-                                        data={dataSetSearch}
-                                        keyExtractor={item => item.id}
-                                        renderItem={({ item, index }) => (
-                                            <Personas
-                                                navigation={navigation}
-                                                item={item}
-                                            //select={item.select}
-                                            //onPress={() => this.changeSelect(index, item.select)}
-                                            />)
-                                        }
-                                    /> 
-
-                                   {/*  <ScrollView>
-                                        {renderizadoBusqueda()}
-                                    </ScrollView> */}
-                                </View>
-                            ) : (
-                                <View style={{ flex: 1, backgroundColor: 'yellow' }}>
-                                    <TouchableOpacity style={{ flex: 1, backgroundColor: 'red' }}
-                                        onPress={() => console.log(dataSetSearch)}
-                                    ><Text>dsadkjasdkjas</Text></TouchableOpacity>
-                                </View>
-                            )}
-                        </View>
-
-
-                    </View>
-                </SafeAreaView>
-
-            </Modal>
+           
         </SafeAreaView>
     );
 }
@@ -370,3 +288,83 @@ const styles = StyleSheet.create({
     },
     btnSearch: { flex: 0.1, width: '90%', backgroundColor: 'white', borderRadius: 20, alignSelf: "center" }
 })
+/***
+ * 
+ *  <Modal
+                animationType="fade"
+                transparent={true}
+                visible={showSearchPeople}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                }}
+            >
+                <StatusBar animated={true}
+                    backgroundColor='white'
+                    barStyle="dark-content"
+                    hidden={true}
+                />
+                <SafeAreaView style={styles.centeredVieww}>
+                    <View style={styles.modalView}>
+                        <View style={{ flexDirection: 'row', flex: 0.2, marginTop: 7 }}>
+                            <View style={{ flex: 0.8, justifyContent: "center" }}>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: 'bold' }}>Search People</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", flex: 0.2, justifyContent: "space-around", alignItems: "center" }}>
+                                <TouchableOpacity style={styles.btnIcono} onPress={() => {setShowSearchPeople(false)
+                                    setShowCardFilter(false)
+                                    setDataSetSearch([])
+                                }}>
+                                    <Icon type="material-community" name="close" color={'#e74c3c'} size={30} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={{ width: "100%" }} >
+                            <Input
+                                placeholder="Search location"
+                                placeholderTextColor='#2ecc71'
+                                //style={{ color: '#ecf0f1', }}
+                                onChangeText={textSearch => handleOnChangeText(textSearch)}
+                                inputContainerStyle={{ borderBottomWidth: 0, borderRadius: 20, justifyContent: "center", marginTop: 20, paddingHorizontal: 20, backgroundColor: '#ecf0f1', }}
+                                leftIcon={<Icon
+                                    type="material-community"
+                                    name="magnify"
+                                    size={30}
+                                    color='#2ecc71'
+                                />}
+                            />
+                           
+                            </View>
+
+                            <View style={{ flex: 0.7, width: "100%" }} >
+                                {showCardFilter ? (
+                                    <View style={{flex: 1, }}>
+                                        <FlatList
+                                            data={dataSetSearch}
+                                            keyExtractor={item => item.id}
+                                            renderItem={({ item, index }) => (
+                                                <Personas
+                                                    navigation={navigation}
+                                                    item={item}
+                                                //select={item.select}
+                                                //onPress={() => this.changeSelect(index, item.select)}
+                                                />)
+                                            }
+                                        /> 
+    
+                                     
+                                    </View>
+                                ) : (
+                                    <View style={{ flex: 1, backgroundColor: 'yellow' }}>
+                                        <TouchableOpacity style={{ flex: 1, backgroundColor: 'red' }}
+                                            onPress={() => console.log(dataSetSearch)}
+                                        ><Text>dsadkjasdkjas</Text></TouchableOpacity>
+                                    </View>
+                                )}
+                            </View>
+    
+    
+                        </View>
+                    </SafeAreaView>
+    
+                </Modal>
+ */

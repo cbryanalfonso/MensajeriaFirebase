@@ -6,6 +6,7 @@ import SignUpScreen from "./credenciales/SignupScreen";
 import LoginScreen from "./credenciales/LoginScreen";
 import Menu from "./views/Menu";
 import ChatScreen from "./views/ChatScreen";
+import Busqueda from "./views/Busqueda";
 
 const Stack = createNativeStackNavigator()
 const MainStack = createNativeStackNavigator()
@@ -37,6 +38,7 @@ export default function AppLogin() {
             <MainStack.Screen name="Chat" component={ChatScreen} options={{headerShown: false}}/>
             <MainStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown: false }} />
             <MainStack.Screen name="SignupScreen" component={SignUpScreen} options={{ headerShown: false }} />
+            <MainStack.Screen name="Busqueda" component={Busqueda}  options={{headerShown: false}} />
         </MainStack.Navigator>
     )
 
